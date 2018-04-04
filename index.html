@@ -24,7 +24,7 @@
 				as[0].style.backgroundColor="black";
 				//点击小红块可以达到切换图片的效果
 				//要点击每个小红块先给所有的红块绑定单击响应函数
-				for (i=0;i<as.length;i++){
+				for (var i=0;i<as.length;i++){
 					//为每一个小红块都添加一个num属性
 					as[i].num=i;
 					as[i].onclick=function(){
@@ -48,10 +48,50 @@
 					};
 					
 				};
+					//开启自动切换图片
+					autoChange();
+					
+					//创建一个函数，用来开启自动切换图片
+					function autoChange(){
+						
+						//开启定时器用来切换图片
+						setInterval(function(){
+							//使索引自增 这里index不能一直增大
+							index++;
+							//判断index的值
+							if (index>as.length){
+								index=0;
+							};
+							move(imgList,"left",-520*index,20,function(){
+								//这里导航没有改变，通过回调函数调整
+								setA();
+							});
+							
+							
+							
+						},3000);
+						
+						
+					};
+					
+					
 					//创建一个方法用来设置被选中的a变色
 					function setA (){
+						//解决计时时候导航条不跳转的问题
+						//出现该问题的原因是增加了一张图片，as.length就增加了
+						//当到达第6张图片的时候，index的值应该等于5（012345），但是只有5个红块，缺少1个
+						if(index>=imgArr.length-1){
+							//这里直接将index设置为0就可以让导航块从第6个直接跳到第1个
+							index=0;
+							//顺便设置图片从第6张秒切换到第1张达到一个流程的效果
+							//因为第6张和第1张图片是一模一样的，直接通过CSS样式调整偏移量到达第1张
+							//进入这个判断说明才达到第6张图片，所以这个css必须设置在这个判断中
+							imgList.style.left=0;
+						}
+							
+						
 					//首先遍历所有的a
-					for(i=0;i<as.length;i++){
+					for(var i=0;i<as.length;i++){
 						//并将所有的a的颜色设置为红色
 						//注意这里不能设置为red，因为js会直接在内联样式中修改颜色
 						//这样会导致样式表中的hover颜色效果被覆盖，这里采用输入空值的方式，默认为空值就会直接采用样式表中的颜色
@@ -73,6 +113,8 @@
 				<li><img src="img/3.jpg" /> </li>
 				<li><img src="img/4.jpg" /> </li>
 				<li><img src="img/5.jpg" /> </li>
+				<li><img src="img/1.jpg" /> </li>
+				
 			</ul>
 			<div id="nav">
 				<a href="javascript:;"> </a>
