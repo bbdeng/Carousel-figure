@@ -28,6 +28,9 @@
 					//为每一个小红块都添加一个num属性
 					as[i].num=i;
 					as[i].onclick=function(){
+						//为了让单击选择优先自动轮播，在这里单击的时候关闭计时器
+						clearInterval(timer);
+						
 						//然后把num属性值传递给index，修正其索引值
 						//这里的this是调用方法的对象
 						index=this.num;
@@ -41,7 +44,11 @@
 						//target为元素需要移动的位置
 						//speed动画移动的速度 填写正值即可
 						//callback回调函数
-						move(imgList,"left",-520*index,20);
+						move(imgList,"left",-520*index,20,function(){
+							//在move回调函数中重新开启计时器，这个move的回调函数是在所有动画执行完毕后才会执行
+							autoChange();
+							
+						});
 						
 						//注意一定要将setA的方法在单击响应函数中调用
 						setA();
@@ -50,12 +57,13 @@
 				};
 					//开启自动切换图片
 					autoChange();
-					
+					//设置一个变量timer来给定时器标记
+					var timer;
 					//创建一个函数，用来开启自动切换图片
 					function autoChange(){
 						
 						//开启定时器用来切换图片
-						setInterval(function(){
+						timer=setInterval(function(){
 							//使索引自增 这里index不能一直增大
 							index++;
 							//判断index的值
